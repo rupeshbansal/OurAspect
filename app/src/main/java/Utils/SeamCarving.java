@@ -25,30 +25,25 @@ public class SeamCarving {
         this.nCols = image.getWidth();
         this.nRows = image.getHeight();
     }
+
     public Bitmap toGrayScale(Bitmap image){
-        Bitmap grayScale = image.copy(image.getConfig(),true);
-//        for(int i=0;i<nCols;i++) {
-//            for (int j = 0; j < nRows; j++) {
-//
-//                int pixel = image.getPixel(i, j);
-//                int redValue = Color.red(pixel);
-//                int blueValue = Color.blue(pixel);
-//                int greenValue = Color.green(pixel);
-//
-//                int intensity = (int) (0.2989*redValue + 0.5870*greenValue + 0.1140*blueValue);
-//                grayScale.setPixel(i, j, intensity);
-//            }
-//        }
-//        return grayScale;
-        Bitmap bmpGrayscale = Bitmap.createBitmap(nCols, nRows, Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(bmpGrayscale);
+        Bitmap grayScale = Bitmap.createBitmap(nCols, nRows, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(grayScale);
         Paint paint = new Paint();
         ColorMatrix cm = new ColorMatrix();
         cm.setSaturation(0);
         ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
         paint.setColorFilter(f);
         c.drawBitmap(image, 0, 0, paint);
-        return bmpGrayscale;
+        for(int i=0;i<nCols;i++){
+            for(int j=0;j<nRows;j++){
+                int pixel = grayScale.getPixel(i,j);
+                int px = Color.alpha(pixel&0xFF);
+                 px = Color.argb(pixel & 0xFF, 0, 0, 0);
+                grayScale.setPixel(i,j,px);
+            }
+        }
+        return grayScale;
     }
 
 
@@ -76,6 +71,8 @@ public class SeamCarving {
         minCost = Math.min(costB.cost, costB.cost)==costB.cost?costB:costA;
         minCost = Math.min(costC.cost, minCost.cost)==costC.cost?costC:minCost;
         int pixel = energyMap.getPixel(j,i);
+
+       // int gray = (int)(pixel & 0xFF);
         minCost.cost+= pixel;
         minCost.pixelPath.add(new Pixels(i,j));
         dp[i][j] = minCost;
@@ -87,7 +84,9 @@ public class SeamCarving {
         for(int i=0;i<nCols;i++) {
             for (int j = 0; j < nRows; j++) {
                 int pixel = grayImage.getPixel(i, j);
+                pixel = (int)(pixel & 0xFF);
                 int pixel2 = gaussimage.getPixel(i, j);
+                pixel2 = (int)(pixel2 & 0xFF);
                 energyMap.setPixel(i, j, Math.abs(pixel-pixel2));
             }
         }
@@ -104,24 +103,29 @@ public class SeamCarving {
                 for(int k=1;k<5;k++) {
                     if (i - k >= 0) {
                         int pixel = grayImage.getPixel(i - k, j);
+                        pixel = (int)(pixel & 0xFF);
                         sum += pixel;
                         count++;
                     }
                     if (j - k >= 0) {
                         int pixel = grayImage.getPixel(i, j - k);
+                        pixel = (int)(pixel & 0xFF);
                         sum += pixel;
                         count++;
                     }
                     if ((i + k) < nCols) {
                         int pixel = grayImage.getPixel(i + k, j);
+                        pixel = (int)(pixel & 0xFF);
                         sum += pixel;
                         count++;
                     }
                     if ((j + k) < nRows) {
                         int pixel = grayImage.getPixel(i, j + k);
+                        pixel = (int)(pixel & 0xFF);
                         sum += pixel;
                         count++;
                     }
+
                 }
                     sum = Math.round(sum / count);
                     energyMap.setPixel(i, j,sum);

@@ -64,7 +64,8 @@ public class MainActivity extends Activity {
                 Log.d("MainActivity ", "The first Log after loading the image.");
 
                 Log.d("MainActivity ", "After gauss");
-                imgView.setImageBitmap(seamCarving.applyGaussian(seamCarving.toGrayScale(bm)));
+                //imgView.setImageBitmap(seamCarving.applyGaussian(seamCarving.toGrayScale(bm)));
+                imgView.setImageBitmap(seamCarving.toGrayScale(bm));
                 Log.d("MainActivity ", "The first Log after loading the image.");
 
 
