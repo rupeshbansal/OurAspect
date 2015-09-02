@@ -11,6 +11,20 @@
         android:layout_weight="1" >
     </ImageView>
 
+    <ImageView
+        android:id="@+id/imgView2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" >
+    </ImageView>
+
+    <EditText
+        android:id="@+id/number_of_seams"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:text="Number of seams"
+        android:inputType="number" />
     <Button
         android:id="@+id/buttonLoadPicture"
         android:layout_width="fill_parent"
@@ -20,5 +34,13 @@
         android:onClick="loadImagefromGallery"
         android:text="Load Picture" >
     </Button>
-
+    <Button
+        android:id="@+id/removingSeams"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="0"
+        android:visibility="invisible"
+        android:text="Remove Seams" >
+    </Button>
 </LinearLayout>
