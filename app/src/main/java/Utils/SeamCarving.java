@@ -57,7 +57,7 @@ public class SeamCarving {
 
     public Bitmap applySeamCarving(){
         dp = new long[nRows][nCols];
-        for(int i = 0 ; i < nRows ; i++) Arrays.fill(dp[i] , -1);
+     //   for(int i = 0 ; i < nRows ; i++) Arrays.fill(dp[i] , -1);
         Bitmap grayImage = toGrayScale(image);
         Bitmap gaussimage = applyGaussian(grayImage);
         energyMap = findDiff(gaussimage , grayImage);
@@ -74,7 +74,7 @@ public class SeamCarving {
 
 
         while(true){
-            energyMap.setPixel(x,y,Color.rgb(255,0,0));
+            grayImage.setPixel(x,y,Color.rgb(255,0,0));
             y=y+1;
             if(y==nRows)
                 break;
@@ -84,7 +84,7 @@ public class SeamCarving {
                 x = Math.min(dp[y][x+1],dp[y][x])==dp[y][x]?x:x+1;
 
         }
-        return energyMap;
+        return grayImage;
     }
 
 //    public PathCost findLowIntensityPath(int i , int j,int flag){
@@ -115,7 +115,7 @@ public class SeamCarving {
     public long pathCost(int i , int j){
         if(i >= nRows) return 0;
         if(j < 0 || j >= nCols || i < 0) return Long.MAX_VALUE/2;
-        if(dp[i][j] != -1) return dp[i][j];
+        if(dp[i][j] != 0) return dp[i][j];
 
         long a1 = pathCost(i + 1 , j);
         long a2 = pathCost(i + 1 , j + 1);
@@ -127,13 +127,13 @@ public class SeamCarving {
         return dp[i][j];
     }
 
-    public Bitmap findDiff(Bitmap gaussimage , Bitmap grayImage) {
+    public Bitmap findDiff(Bitmap gaussImage , Bitmap grayImage) {
         Bitmap energyMap = grayImage.copy(grayImage.getConfig(),true);
         for(int i=0;i<nCols;i++) {
             for (int j = 0; j < nRows; j++) {
                 int pixel = grayImage.getPixel(i, j);
                 pixel = (int)(pixel & 0xFF);
-                int pixel2 = gaussimage.getPixel(i, j);
+                int pixel2 = gaussImage.getPixel(i, j);
                 pixel2 = (int)(pixel2 & 0xFF);
                 int val = Math.abs(pixel - pixel2);
                 energyMap.setPixel(i, j, Color.argb(255,val,val,val));
@@ -143,13 +143,13 @@ public class SeamCarving {
     }
 
     public Bitmap applyGaussian(Bitmap grayImage) {
-        Bitmap energyMap = grayImage.copy(grayImage.getConfig(),true);
+        Bitmap gaussianImage = grayImage.copy(grayImage.getConfig(),true);
 
         for(int i=0;i<nCols;i++){
             for(int j=0;j<nRows;j++){
                 int sum = 0;
                 float count = 0;
-                for(int k=1;k<15;k++) {
+                for(int k=1;k<5;k++) {
                     if (i - k >= 0) {
                         int pixel = grayImage.getPixel(i - k, j);
                         pixel = (int)(pixel & 0xFF);
@@ -177,11 +177,11 @@ public class SeamCarving {
 
                 }
                     sum = Math.round(sum / count);
-                    energyMap.setPixel(i, j,Color.argb(255,sum,sum,sum));
+                gaussianImage.setPixel(i, j,Color.argb(255,sum,sum,sum));
 
             }
         }
-        return energyMap;
+        return gaussianImage;
     }
 
 }
