@@ -37,37 +37,18 @@ public class SeamCarving {
         ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
         paint.setColorFilter(f);
         c.drawBitmap(image, 0, 0, paint);
-       // int px = grayScale.getPixel(0 , 0);
-     //   grayScale.setPixel(0 , 0 , Color.argb(0 , 0 , 0 , 0));
-//        for(int i=0;i<nCols;i++){
-//            for(int j=0;j<nRows;j++){
-//                int pixel = grayScale.getPixel(i,j);
-//                int nrewR = pixel&0xFF;
-//                int A = Color.alpha(pixel);
-//                int R = Color.red(pixel);
-//                int G = Color.green(pixel);
-//                int B = Color.blue(pixel);
-//
-//
-//            }
-//        }
         return grayScale;
     }
 
-
-    public Bitmap applySeamCarving(Bitmap bitmap){
+    public Bitmap applySeamCarving(Bitmap grayImage){
         dp = new long[nRows][nCols];
-     //   for(int i = 0 ; i < nRows ; i++) Arrays.fill(dp[i] , -1);
-        Bitmap grayImage = toGrayScale(image);
-        Bitmap gaussimage = applyGaussian(grayImage);
-        energyMap = findDiff(gaussimage , grayImage);
-        int flag = 0;
         int key=0;
         long minCost = Long.MAX_VALUE;
-        for(int i=0;i<flag*nRows+(1-flag)*nCols;i++) {
+
+        for(int i=0;i< nCols;i++) {
             long cost= pathCost(0,i);
+            if(cost < minCost) key = i;
             minCost = (Math.min(minCost, cost));
-            key = i;
         }
         int x = key;
         int y=0;
@@ -137,7 +118,7 @@ public class SeamCarving {
         return dp;
     }
     public Bitmap findDiff(Bitmap gaussImage , Bitmap grayImage) {
-        Bitmap energyMap = grayImage.copy(grayImage.getConfig(),true);
+        energyMap = grayImage.copy(grayImage.getConfig(),true);
         for(int i=0;i<nCols;i++) {
             for (int j = 0; j < nRows; j++) {
                 int pixel = grayImage.getPixel(i, j);
