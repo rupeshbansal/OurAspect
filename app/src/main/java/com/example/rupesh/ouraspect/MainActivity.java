@@ -164,7 +164,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
 
             case R.id.applySeamCarving:
-                Bitmap temp = seamCarving.applySeamCarving(grayImage);
+                Bitmap temp = seamCarving.applySeamCarving(grayImage ,2);
                 imgView.setImageBitmap(temp);
 
                 computeEnergy.setVisibility(View.INVISIBLE);
@@ -196,7 +196,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         protected Bitmap doInBackground(URL... urls) {
             SeamCarving seamCarving = new SeamCarving(bitmap);
            // pathCost = seamCarving.computePathCost();
-            Bitmap result = seamCarving.applySeamCarving(bitmap);
+            Bitmap result = seamCarving.applySeamCarving(bitmap , 2);
             Log.d("doInBackground ", "Entering do in background");
             return result;
         }
